@@ -1,0 +1,5 @@
+{
+    "name": "knecht-works/test-php",
+    "description": "Minimal ddev fixture for Knecht end-to-end tests",
+    "require": {}
+}

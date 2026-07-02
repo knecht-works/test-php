@@ -1,0 +1,5 @@
+name: test-php
+type: php
+docroot: public
+php_version: "8.3"
+webserver_type: nginx-fpm

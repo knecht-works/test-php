@@ -21,7 +21,7 @@ $env = [
 ];
 ?>
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -36,7 +36,7 @@ $env = [
   <link rel="manifest" href="https://knecht.works/styleguide/favicon/site.webmanifest" />
   <meta name="robots" content="noindex,follow" />
 </head>
-<body class="kit-body">
+<body class="kit-body kit-light">
   <main class="kit-container kit-stack">
 
     <span class="kit-badge kit-mb-4">php-test-e2e</span>

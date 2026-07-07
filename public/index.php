@@ -35,9 +35,44 @@ $env = [
   <meta name="apple-mobile-web-app-title" content="Knecht" />
   <link rel="manifest" href="https://knecht.works/styleguide/favicon/site.webmanifest" />
   <meta name="robots" content="noindex,follow" />
+  <script>
+    // Apply the saved or system-preferred color scheme before paint to avoid a flash.
+    (function () {
+      try {
+        var stored = localStorage.getItem('kit-theme');
+        var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        var theme = stored || (prefersDark ? 'dark' : 'light');
+        document.documentElement.dataset.theme = theme;
+      } catch (e) {}
+    })();
+  </script>
+  <style>
+    /* Fallback dark-mode styles in case the styleguide kit does not ship a kit-dark theme. */
+    html[data-theme="dark"] body.kit-body {
+      background-color: #09090b;
+      color: #e4e4e7;
+    }
+    html[data-theme="dark"] .kit-muted { color: #a1a1aa; }
+    html[data-theme="dark"] .kit-card {
+      background-color: #18181b;
+      border-color: #27272a;
+    }
+    html[data-theme="dark"] .kit-code { background-color: #27272a; color: #e4e4e7; }
+    .kit-theme-toggle { align-self: flex-end; }
+  </style>
 </head>
-<body class="kit-body kit-light">
+<body class="kit-body">
   <main class="kit-container kit-stack">
+
+    <button
+      type="button"
+      class="kit-button kit-button--ghost kit-theme-toggle"
+      id="kit-theme-toggle"
+      aria-label="Toggle dark mode"
+      aria-pressed="false"
+    >
+      <span data-theme-label>Dark mode</span>
+    </button>
 
     <span class="kit-badge kit-mb-4">php-test-e2e</span>
 
@@ -71,5 +106,49 @@ $env = [
     </p>
 
   </main>
+
+  <script>
+    (function () {
+      var root = document.documentElement;
+      var body = document.body;
+      var toggle = document.getElementById('kit-theme-toggle');
+      var label = toggle ? toggle.querySelector('[data-theme-label]') : null;
+
+      function apply(theme) {
+        root.dataset.theme = theme;
+        body.classList.toggle('kit-dark', theme === 'dark');
+        body.classList.toggle('kit-light', theme !== 'dark');
+        if (toggle) {
+          toggle.setAttribute('aria-pressed', theme === 'dark' ? 'true' : 'false');
+        }
+        if (label) {
+          label.textContent = theme === 'dark' ? 'Light mode' : 'Dark mode';
+        }
+      }
+
+      // Sync classes with the theme chosen by the inline head script.
+      apply(root.dataset.theme === 'dark' ? 'dark' : 'light');
+
+      if (toggle) {
+        toggle.addEventListener('click', function () {
+          var next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+          apply(next);
+          try {
+            localStorage.setItem('kit-theme', next);
+          } catch (e) {}
+        });
+      }
+
+      // Follow OS changes when the user has not made an explicit choice.
+      if (window.matchMedia) {
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function (e) {
+          try {
+            if (localStorage.getItem('kit-theme')) return;
+          } catch (err) {}
+          apply(e.matches ? 'dark' : 'light');
+        });
+      }
+    })();
+  </script>
 </body>
 </html>

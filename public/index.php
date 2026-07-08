@@ -37,6 +37,28 @@ $env = [
   <meta name="robots" content="noindex,follow" />
 </head>
 <body class="kit-body kit-light">
+  <script>
+    // Apply any previously saved theme before paint to avoid a flash of the
+    // wrong theme. Default (no saved preference) stays light, matching the
+    // server-rendered `kit-light` class above.
+    (function () {
+      var saved = localStorage.getItem('kit-theme');
+      if (saved === 'dark') {
+        document.body.classList.remove('kit-light');
+      } else if (saved === 'light') {
+        document.body.classList.add('kit-light');
+      }
+    })();
+  </script>
+
+  <button
+    type="button"
+    id="theme-toggle"
+    class="kit-button kit-button--ghost"
+    style="position: fixed; top: 1rem; right: 1rem; z-index: 10;"
+    aria-label="Toggle dark mode"
+  >🌙 Dark mode</button>
+
   <main class="kit-container kit-stack">
 
     <span class="kit-badge kit-mb-4">php-test-e2e</span>
@@ -71,5 +93,24 @@ $env = [
     </p>
 
   </main>
+
+  <script defer>
+    (function () {
+      var toggle = document.getElementById('theme-toggle');
+      function render(mode) {
+        var isLight = mode === 'light';
+        toggle.textContent = isLight ? '🌙 Dark mode' : '☀️ Light mode';
+        toggle.setAttribute('aria-pressed', String(!isLight));
+      }
+      KnechtKit.ready(function () {
+        render(document.body.classList.contains('kit-light') ? 'light' : 'dark');
+        toggle.addEventListener('click', function () {
+          var mode = KnechtKit.toggleTheme();
+          localStorage.setItem('kit-theme', mode);
+          render(mode);
+        });
+      });
+    })();
+  </script>
 </body>
 </html>

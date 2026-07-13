@@ -90,7 +90,11 @@ $env = [
   </main>
 
   <script>
-    KnechtKit.ready(function () {
+    // kit.js is loaded with `defer`, so it may not have run yet by the time
+    // this inline script is parsed (inline scripts ignore `defer` and run
+    // immediately). Wait for DOMContentLoaded, which always fires after
+    // deferred scripts have executed, so `KnechtKit` is guaranteed to exist.
+    document.addEventListener('DOMContentLoaded', function () {
       var toggle = document.getElementById('kit-theme-toggle')
 
       function setIcon(mode) {

@@ -50,7 +50,7 @@ $env = [
   <button
     type="button"
     id="kit-theme-toggle"
-    class="kit-button kit-button--ghost kit-theme-toggle"
+    class="kit-button kit-button--solid kit-theme-toggle"
     aria-label="Switch to dark mode"
   >🌙</button>
 

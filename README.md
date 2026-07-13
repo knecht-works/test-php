@@ -47,4 +47,4 @@ The project is then available at:
 
 MIT — see [LICENSE](./LICENSE).
 
-Maintained by Knecht.
+Maintained by Knecht (knecht.works).

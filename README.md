@@ -46,3 +46,5 @@ The project is then available at:
 ## License
 
 MIT — see [LICENSE](./LICENSE).
+
+Maintained by Knecht.

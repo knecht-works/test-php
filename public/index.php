@@ -35,8 +35,25 @@ $env = [
   <meta name="apple-mobile-web-app-title" content="Knecht" />
   <link rel="manifest" href="https://knecht.works/styleguide/favicon/site.webmanifest" />
   <meta name="robots" content="noindex,follow" />
+  <style>
+    .kit-theme-toggle {
+      position: fixed;
+      top: 1.25rem;
+      right: 1.25rem;
+      z-index: 20;
+      font-size: 1rem;
+      line-height: 1;
+    }
+  </style>
 </head>
 <body class="kit-body kit-light">
+  <button
+    type="button"
+    id="kit-theme-toggle"
+    class="kit-button kit-button--ghost kit-theme-toggle"
+    aria-label="Switch to dark mode"
+  >🌙</button>
+
   <main class="kit-container kit-stack">
 
     <span class="kit-badge kit-mb-4">php-test-e2e</span>
@@ -71,5 +88,23 @@ $env = [
     </p>
 
   </main>
+
+  <script>
+    KnechtKit.ready(function () {
+      var toggle = document.getElementById('kit-theme-toggle')
+
+      function setIcon(mode) {
+        toggle.textContent = mode === 'light' ? '🌙' : '☀️'
+        toggle.setAttribute(
+          'aria-label',
+          mode === 'light' ? 'Switch to dark mode' : 'Switch to light mode'
+        )
+      }
+
+      toggle.addEventListener('click', function () {
+        setIcon(KnechtKit.toggleTheme())
+      })
+    })
+  </script>
 </body>
 </html>

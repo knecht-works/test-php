@@ -37,6 +37,15 @@ $env = [
   <meta name="robots" content="noindex,follow" />
 </head>
 <body class="kit-body kit-light">
+
+  <button
+    id="theme-toggle"
+    type="button"
+    class="kit-button kit-button--ghost kit-fixed"
+    style="top: 1.25rem; right: 1.25rem; z-index: 20;"
+    aria-label="Toggle dark/light mode"
+  >🌙</button>
+
   <main class="kit-container kit-stack">
 
     <span class="kit-badge kit-mb-4">php-test-e2e</span>
@@ -71,5 +80,35 @@ $env = [
     </p>
 
   </main>
+
+  <script>
+    // Wait for DOMContentLoaded rather than calling KnechtKit.ready() directly:
+    // kit.js is loaded with `defer`, so it hasn't run yet (and `KnechtKit` is
+    // still undefined) at the point this inline script is parsed. Deferred
+    // scripts are guaranteed to finish before DOMContentLoaded fires, so by
+    // then `window.KnechtKit` is safely available.
+    document.addEventListener('DOMContentLoaded', function () {
+      var STORAGE_KEY = 'kit-theme';
+      var btn = document.getElementById('theme-toggle');
+
+      function syncButton(isLight) {
+        btn.textContent = isLight ? '🌙' : '☀️';
+        btn.setAttribute('aria-label', isLight ? 'Switch to dark mode' : 'Switch to light mode');
+      }
+
+      var saved = window.localStorage.getItem(STORAGE_KEY);
+      if (saved === 'light' || saved === 'dark') {
+        syncButton(KnechtKit.toggleTheme(saved === 'light') === 'light');
+      } else {
+        syncButton(document.body.classList.contains('kit-light'));
+      }
+
+      btn.addEventListener('click', function () {
+        var mode = KnechtKit.toggleTheme();
+        window.localStorage.setItem(STORAGE_KEY, mode);
+        syncButton(mode === 'light');
+      });
+    });
+  </script>
 </body>
 </html>

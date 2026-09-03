@@ -54,12 +54,7 @@ function vite(string $entry): string {
 
   <?= vite('src/js/app.js') ?>
 
-  <link rel="icon" type="image/png" href="https://knecht.works/styleguide/favicon/favicon-96x96.png" sizes="96x96" />
-  <link rel="icon" type="image/svg+xml" href="https://knecht.works/styleguide/favicon/favicon.svg" />
-  <link rel="shortcut icon" href="https://knecht.works/styleguide/favicon/favicon.ico" />
-  <link rel="apple-touch-icon" sizes="180x180" href="https://knecht.works/styleguide/favicon/apple-touch-icon.png" />
-  <meta name="apple-mobile-web-app-title" content="Knecht" />
-  <link rel="manifest" href="https://knecht.works/styleguide/favicon/site.webmanifest" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <meta name="robots" content="noindex,follow" />
 </head>
 <body class="kit-body kit-light">

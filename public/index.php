@@ -19,6 +19,28 @@ $env = [
   'Timezone'        => date_default_timezone_get(),
   'Server time'     => date('Y-m-d H:i:s'),
 ];
+
+// Tags for a Vite entry, read from the manifest that `npm run build` writes.
+// A missing manifest renders a comment instead of failing the page.
+function vite(string $entry): string {
+  static $manifest = null;
+  if ($manifest === null) {
+    $file = __DIR__ . '/dist/.vite/manifest.json';
+    $manifest = is_file($file) ? (json_decode(file_get_contents($file), true) ?: []) : [];
+  }
+  $chunk = $manifest[$entry] ?? null;
+  if (!$chunk) {
+    return '<!-- vite: no manifest entry for ' . htmlspecialchars($entry) . ', run `npm run build` -->';
+  }
+  $tags = '';
+  foreach ($chunk['css'] ?? [] as $css) {
+    $tags .= '<link rel="stylesheet" href="/dist/' . htmlspecialchars($css) . '">' . "\n  ";
+  }
+  $tags .= str_ends_with($chunk['file'], '.css')
+    ? '<link rel="stylesheet" href="/dist/' . htmlspecialchars($chunk['file']) . '">'
+    : '<script type="module" src="/dist/' . htmlspecialchars($chunk['file']) . '"></script>';
+  return $tags;
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -28,6 +50,10 @@ $env = [
   <title>PHP Test | Knecht</title>
   <link rel="stylesheet" href="https://knecht.works/styleguide/kit.css">
   <script src="https://knecht.works/styleguide/kit.js" defer></script>
+  <?= vite('src/css/app.css') ?>
+
+  <?= vite('src/js/app.js') ?>
+
   <link rel="icon" type="image/png" href="https://knecht.works/styleguide/favicon/favicon-96x96.png" sizes="96x96" />
   <link rel="icon" type="image/svg+xml" href="https://knecht.works/styleguide/favicon/favicon.svg" />
   <link rel="shortcut icon" href="https://knecht.works/styleguide/favicon/favicon.ico" />
@@ -62,6 +88,10 @@ $env = [
           <dd><?= htmlspecialchars((string) $value) ?></dd>
         </div>
         <?php endforeach; ?>
+        <div class="kit-dl-row">
+          <dt>Vite bundle</dt>
+          <dd data-vite-status="pending">not loaded</dd>
+        </div>
       </dl>
     </section>
 

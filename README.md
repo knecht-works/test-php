@@ -13,15 +13,17 @@
 
 </div>
 
-A minimal [DDEV](https://ddev.com) PHP project used as an end-to-end test fixture for [Knecht](https://knecht.works). It serves a single page (`public/index.php`) on three hostnames — a primary plus `alpha.*` and `beta.*` — so Knecht can boot the environment, hit each host, and assert against the rendered output.
+A minimal [DDEV](https://ddev.com) PHP project used as an end-to-end test fixture for [Knecht](https://knecht.works). It serves a single page (`public/index.php`) on three hostnames — a primary plus `alpha.*` and `beta.*` — so Knecht can boot the environment, hit each host, and assert against the rendered output. A small [Vite](https://vitejs.dev) bundle (`src/`) is built into `public/dist` and included through its manifest by hand, without a framework plugin: the "Vite bundle" row on the page flips from "not loaded" to "loaded" once the built script runs.
 
 ## Setup
 
 Requires [DDEV](https://ddev.readthedocs.io/en/stable/users/install/ddev-installation/) and a Docker provider (Docker, OrbStack, or Colima).
 
 ```bash
-ddev start     # boot the containers
-ddev launch    # open the site in your browser
+ddev start          # boot the containers
+ddev npm install
+ddev npm run build  # build src/ into public/dist (read via the Vite manifest)
+ddev launch         # open the site in your browser
 ```
 
 The project is then available at:

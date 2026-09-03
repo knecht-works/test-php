@@ -6,3 +6,4 @@ webserver_type: nginx-fpm
 additional_hostnames:
   - alpha.test-php
   - beta.test-php
+nodejs_version: "24"

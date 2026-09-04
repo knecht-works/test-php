@@ -20,10 +20,27 @@ $env = [
   'Server time'     => date('Y-m-d H:i:s'),
 ];
 
-// Tags for a Vite entry, read from the manifest that `npm run build` writes.
-// A missing manifest renders a comment instead of failing the page.
+// Tags for a Vite entry. With a dev server (Knecht hands its browser-facing
+// URL in as KNECHT_DEV_SERVER_URL) the entry is loaded from there, with the
+// HMR client once in front. Otherwise the tags come from the manifest that
+// `npm run build` writes; a missing manifest renders a comment instead of
+// failing the page.
 function vite(string $entry): string {
   static $manifest = null;
+  static $clientEmitted = false;
+  $dev = getenv('KNECHT_DEV_SERVER_URL');
+  if ($dev) {
+    $dev = rtrim($dev, '/');
+    $tags = '';
+    if (!$clientEmitted) {
+      $clientEmitted = true;
+      $tags .= '<script type="module" src="' . htmlspecialchars($dev) . '/@vite/client"></script>' . "\n  ";
+    }
+    $src = htmlspecialchars($dev . '/' . ltrim($entry, '/'));
+    return $tags . (str_ends_with($entry, '.css')
+      ? '<link rel="stylesheet" href="' . $src . '">'
+      : '<script type="module" src="' . $src . '"></script>');
+  }
   if ($manifest === null) {
     $file = __DIR__ . '/dist/.vite/manifest.json';
     $manifest = is_file($file) ? (json_decode(file_get_contents($file), true) ?: []) : [];
